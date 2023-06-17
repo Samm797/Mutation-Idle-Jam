@@ -1,15 +1,23 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Townsfolk : MonoBehaviour
 {
+    public static event EventHandler<OnFoodChangesArgs> OnEating;
+
+    public class OnFoodChangesArgs : EventArgs
+    {
+        public int amount;
+    }
+
     // Defines how the Townfolk interacts
     private int _jobID;
     private SpriteRenderer _rend;
     public Sprite currentOutfit;
 
     // Survival
-    private int _amountToEat;
+    public int amountToEat;
 
     // Corruption
     private int _maxCorruption = 100;
@@ -18,28 +26,27 @@ public class Townsfolk : MonoBehaviour
     // Mutations
     [SerializeField] private List<Mutation> _currentMutations = new List<Mutation>();
 
-    // Communication with other scripts 
-    // Will shift to an observer pattern if time allows 
-    private Food _food;
 
     private void Awake()
     {
-        _food = GameObject.Find("Player").GetComponent<Food>();
-
         _rend = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
-        _amountToEat = 1;
+        amountToEat = 1;
         _currentCorruption = 0;
 
         _rend.sprite = currentOutfit;
     }
+    private void Update()
+    {
+
+    }
 
     public void Eat()
     {
-        _food.ConsumeFood(_amountToEat);
+        OnEating?.Invoke(this, new OnFoodChangesArgs { amount = amountToEat });
     }
 
     public void AddCorruption(int amount)
@@ -86,10 +93,10 @@ public class Townsfolk : MonoBehaviour
                 // Archaeologist
                 break;
             case 2:
-                // Priest
+                // Farmer
                 break;
             case 3:
-                // Farmer
+                // Priest
                 break;
         }
     }

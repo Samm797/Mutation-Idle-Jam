@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0400bdb71dbff3743abc2076198a5c73, type: 3}
+  m_Name: EvilDoug
+  m_EditorClassIdentifier: 
+  relicName: EvilDoug
+  image: {fileID: 3625043607559282579, guid: 045b15ec09bba42448d89db77fa6f20a, type: 3}
+  value: 10
+  mutation: {fileID: 11400000, guid: 22da33342a0450a4fbdd1f2cdea66840, type: 2}
+  corruptionAmount: 2
+  chance: 25

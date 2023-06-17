@@ -13,10 +13,13 @@ public class PlayerController : MonoBehaviour
     private Camera _camera;
     private RaycastHit _hitInfo;
 
+    private Townsfolk _townsfolk;
+
     private void Awake()
     {
         _food = GetComponent<Food>();
         _camera = Camera.main;
+        _townsfolk = GameObject.Find("Townsfolk").GetComponent<Townsfolk>();
     }
 
     private void Start()
@@ -26,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        /*
         // Left mouse click
         if (Input.GetMouseButtonDown(0))
         {
@@ -42,6 +46,16 @@ public class PlayerController : MonoBehaviour
 
                 SelectTownsfolk(newTarget);
             }
+        }
+        */
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            _food.AddFood(2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            _townsfolk.Eat();
         }
     }
 
