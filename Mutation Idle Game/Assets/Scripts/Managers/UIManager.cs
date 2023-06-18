@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Args;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,27 +12,34 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         _foodCount = Food.totalFood;
-        Food.OnFoodAdded += IncrementFoodCount;
+        //Farmer.OnFoodAdded += IncrementFoodCount;
         Townsfolk.OnEating += DecrementFoodCount;
+        Food.OnEmpty += EmptyFoodStoreAlert;
     }
 
     private void OnDisable()
     {
-        Food.OnFoodAdded -= IncrementFoodCount;
+        //Farmer.OnFoodAdded -= IncrementFoodCount;
         Townsfolk.OnEating -= DecrementFoodCount;
+        Food.OnEmpty -= EmptyFoodStoreAlert;
     }
 
-    private void IncrementFoodCount(object sender, Food.OnFoodChangedArgs args)
+    private void IncrementFoodCount(object sender, IntegerArgs args)
     {
         _foodCount += args.amount;
         Debug.Log($"Food: {_foodCount}");
         // foodText.text = $"Food: {_foodCount}";
     }
 
-    public void DecrementFoodCount(object sender, Townsfolk.OnFoodChangesArgs args)
+    public void DecrementFoodCount(object sender, IntegerArgs args)
     {
         _foodCount -= args.amount;
         Debug.Log($"Food: {_foodCount}");
         //foodText.text = $"Food: {_foodCount}";
+    }
+
+    private void EmptyFoodStoreAlert()
+    {
+        Debug.Log("There is no food left! Please assign more cultists to farming!");
     }
 }

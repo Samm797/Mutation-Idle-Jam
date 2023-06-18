@@ -1,25 +1,34 @@
+using Pathfinding;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Args;
 
 public class PlayerController : MonoBehaviour
 {
+    // Stops and starts the movement of the Townsfolk
+    public static event Action OnMovingTownsfolk;
+    public static event Action OnStoppingTownsfolk;
+
+    // Sets the destination for the Townsfolk
+    public static event EventHandler<TransformArgs> OnSettingDestination;
+
+    
     private List<Townsfolk> _townsfolks = new List<Townsfolk>();
 
     private int _maxTownsfolk;
-    private Food _food;
 
     private Townsfolk _currentTarget, _previousTarget;
     private Camera _camera;
     private RaycastHit _hitInfo;
 
-    private Townsfolk _townsfolk;
+
+    public Transform homeBase, mine;
 
     private void Awake()
     {
-        _food = GetComponent<Food>();
         _camera = Camera.main;
-        _townsfolk = GameObject.Find("Townsfolk").GetComponent<Townsfolk>();
     }
 
     private void Start()
@@ -29,34 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        /*
-        // Left mouse click
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast( ray, out _hitInfo))
-            {
-                if (_hitInfo.collider.gameObject.GetComponent<Townsfolk>() == null)
-                {
-                    return;
-                }
-
-                Townsfolk newTarget = _hitInfo.collider.gameObject.GetComponent<Townsfolk>();
-
-                SelectTownsfolk(newTarget);
-            }
-        }
-        */
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            _food.AddFood(2);
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            _townsfolk.Eat();
-        }
     }
 
     private void SelectTownsfolk(Townsfolk target)
@@ -64,16 +46,16 @@ public class PlayerController : MonoBehaviour
         if (_currentTarget == null)
         {
             _currentTarget = target;
-            _currentTarget.ShowInfo();
+            //_currentTarget.ShowInfo();
         }
         else
         {
             _previousTarget = _currentTarget;
-            _previousTarget.HideInfo();
+            //_previousTarget.HideInfo();
             _previousTarget = null;
 
             _currentTarget = target;
-            _currentTarget.ShowInfo();
+            //_currentTarget.ShowInfo();
         }
     }
 

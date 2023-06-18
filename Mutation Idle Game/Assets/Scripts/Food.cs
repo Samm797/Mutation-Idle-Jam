@@ -1,40 +1,38 @@
 using System;
 using UnityEngine;
+using Args;
 
 public class Food : MonoBehaviour
 {
-    // Static so the other classes can utilize it OnEnable
-    public static event EventHandler<OnFoodChangedArgs> OnFoodAdded;
+    public static event Action OnEmpty;
     public static int totalFood;
 
-    /// <summary>
-    /// Arg used to pass a reference to an int through an event
-    /// </summary>
-    public class OnFoodChangedArgs: EventArgs
-    {
-        public int amount;
-    }
 
     private void OnEnable()
     {
-        Townsfolk.OnEating += Townsfolk_OnEating;
+        Townsfolk.OnEating += Eat;
+        //Farmer.OnFoodAdded += AddFood;
     }
-
     private void OnDisable()
     {
-        Townsfolk.OnEating -= Townsfolk_OnEating;
+        Townsfolk.OnEating -= Eat;
+        //Farmer.OnFoodAdded -= AddFood;
     }
 
-    private void Townsfolk_OnEating(object sender, Townsfolk.OnFoodChangesArgs e)
+    private void AddFood(object sender, IntegerArgs e)
+    {
+        totalFood += e.amount;
+    }
+
+
+    private void Eat(object sender, IntegerArgs e)
     {
         totalFood -= e.amount;
-    }
 
-    public void AddFood(int amount)
-    {
-        totalFood += amount;
-        // If the event is not null, invoke it
-            // Same as writing if (OnFoodAdded != null)
-        OnFoodAdded?.Invoke(this, new OnFoodChangedArgs { amount = amount });
+        if (totalFood <= 0)
+        {
+            totalFood = 0;
+            OnEmpty?.Invoke();
+        }
     }
 }
