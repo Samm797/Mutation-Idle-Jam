@@ -5,18 +5,18 @@ using Args;
 public class Food : MonoBehaviour
 {
     public static event Action OnEmpty;
-    public static int totalFood;
+    public static int totalFood = 5;
 
 
     private void OnEnable()
     {
-        Townsfolk.OnEating += Eat;
-        //Farmer.OnFoodAdded += AddFood;
+        Cultist.OnEating += RemoveFood;
+        Farmer.OnFoodAdded += AddFood;
     }
     private void OnDisable()
     {
-        Townsfolk.OnEating -= Eat;
-        //Farmer.OnFoodAdded -= AddFood;
+        Cultist.OnEating -= RemoveFood;
+        Farmer.OnFoodAdded -= AddFood;
     }
 
     private void AddFood(object sender, IntegerArgs e)
@@ -24,8 +24,7 @@ public class Food : MonoBehaviour
         totalFood += e.amount;
     }
 
-
-    private void Eat(object sender, IntegerArgs e)
+    private void RemoveFood(object sender, IntegerArgs e)
     {
         totalFood -= e.amount;
 

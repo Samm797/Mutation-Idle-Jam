@@ -12,30 +12,23 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         _foodCount = Food.totalFood;
-        //Farmer.OnFoodAdded += IncrementFoodCount;
-        Townsfolk.OnEating += DecrementFoodCount;
+        Farmer.OnFoodAdded += FoodChanged;
+        Cultist.OnEating += FoodChanged;
         Food.OnEmpty += EmptyFoodStoreAlert;
     }
 
     private void OnDisable()
     {
-        //Farmer.OnFoodAdded -= IncrementFoodCount;
-        Townsfolk.OnEating -= DecrementFoodCount;
+        Farmer.OnFoodAdded -= FoodChanged;
+        Cultist.OnEating -= FoodChanged;
         Food.OnEmpty -= EmptyFoodStoreAlert;
     }
 
-    private void IncrementFoodCount(object sender, IntegerArgs args)
+    private void FoodChanged(object sender, IntegerArgs args)
     {
-        _foodCount += args.amount;
+        _foodCount = Food.totalFood;
         Debug.Log($"Food: {_foodCount}");
         // foodText.text = $"Food: {_foodCount}";
-    }
-
-    public void DecrementFoodCount(object sender, IntegerArgs args)
-    {
-        _foodCount -= args.amount;
-        Debug.Log($"Food: {_foodCount}");
-        //foodText.text = $"Food: {_foodCount}";
     }
 
     private void EmptyFoodStoreAlert()
