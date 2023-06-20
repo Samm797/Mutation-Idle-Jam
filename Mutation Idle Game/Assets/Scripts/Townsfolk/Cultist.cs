@@ -11,7 +11,7 @@ public class Cultist : MonoBehaviour
 
     public int amountToEat = 1;
     private int _totalAmountToEat;
-    private int _numberOfCultists = 0;
+    private int _numberOfCultists;
 
     private void Start()
     {
@@ -32,17 +32,11 @@ public class Cultist : MonoBehaviour
 
     public void Eat()
     {
-        OnEating?.Invoke(this, new IntegerArgs { amount = amountToEat });
+        OnEating?.Invoke(this, new IntegerArgs { amount = (amountToEat * _numberOfCultists) });
     }
 
     private void CultistAmountChanged()
     {
         _numberOfCultists = CultManager.NumberOfCultists;
-    }
-
-
-    private void JobAssignment(object sender, IntegerArgs args)
-    {
-
     }
 }

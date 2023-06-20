@@ -5,6 +5,7 @@ using Args;
 public class Food : MonoBehaviour
 {
     public static event Action OnEmpty;
+    public static event EventHandler<IntegerArgs> OnFoodChanged;
     public static int totalFood = 5;
 
 
@@ -22,6 +23,7 @@ public class Food : MonoBehaviour
     private void AddFood(object sender, IntegerArgs e)
     {
         totalFood += e.amount;
+        OnFoodChanged?.Invoke(this, new IntegerArgs { amount = e.amount});
     }
 
     private void RemoveFood(object sender, IntegerArgs e)
@@ -33,5 +35,7 @@ public class Food : MonoBehaviour
             totalFood = 0;
             OnEmpty?.Invoke();
         }
+        
+        OnFoodChanged?.Invoke(this, new IntegerArgs { amount = e.amount});
     }
 }

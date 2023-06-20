@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Args;
 using System;
+using Unity.VisualScripting;
 
 public class CultManager : MonoBehaviour
 {
@@ -11,29 +12,13 @@ public class CultManager : MonoBehaviour
     public static event Action OnChangingFarmers;
     public static event Action OnChangingArcheologists;
     public static float EatingInterval = 10f;
-    public static float TownsfolkInterval = 20f;
+    public static float CultistSpawnInterval = 20f;
 
     public static int NumberOfCultists;
     public static int NumberOfFarmers;
     public static int NumberOfArchaeologists;
-    public static int JobID;
 
-    [SerializeField] private GameObject _townsfolkContainer;
-    [SerializeField] private GameObject _cultistPrefab;
-    [SerializeField] private GameObject _farmerPrefab;
-    [SerializeField] private GameObject _archeologistPrefab;
-
-    // Jobs
-    /// <summary>
-    /// 0 = Cultist; 1 = Farmer; 2 = Archeologist; 3 = Priest
-    /// </summary>
-    private int _jobID;
-
-
-    public Transform homeBase;
-
-
-    private bool _townsfolkEating, _townsfolkSpawning = false;
+    private bool _cultistEating, _cultistSpawning = false;
 
     private void OnEnable()
     {
@@ -53,7 +38,7 @@ public class CultManager : MonoBehaviour
         
         if (NumberOfCultists <= 0)
         {
-            _townsfolkEating = false;
+            _cultistEating = false;
             return;
         }
 
@@ -63,7 +48,7 @@ public class CultManager : MonoBehaviour
 
     private void CheckSpawning()
     {
-        if (!_townsfolkSpawning && Food.totalFood >= NumberOfCultists)
+        if (!_cultistSpawning)
         {
             StartCoroutine(AddCultistRoutine());
         }
@@ -71,6 +56,7 @@ public class CultManager : MonoBehaviour
     public void AddCultist()
     {
         NumberOfCultists++;
+        Debug.Log($"AddCultist called! Total cultists: {NumberOfCultists}");
 
         // Alert that a new townsfolk has been added
         OnChangingCultists?.Invoke();
@@ -78,17 +64,28 @@ public class CultManager : MonoBehaviour
 
     private IEnumerator AddCultistRoutine()
     {
-        _townsfolkSpawning = true;
-        while (_townsfolkSpawning)
+        _cultistSpawning = true;
+        while (_cultistSpawning)
         {
             AddCultist();
-            yield return new WaitForSeconds(TownsfolkInterval);
+            yield return new WaitForSeconds(CultistSpawnInterval);
         }
+    }
+    private void RemoveCultist()
+    {
+        NumberOfCultists--;
+
+        if (NumberOfCultists <= 0)
+        {
+            NumberOfCultists = 0;
+        }
+
+        OnChangingCultists?.Invoke();
     }
 
     private void CheckEating()
     {
-        if (!_townsfolkEating)
+        if (!_cultistEating)
         {
             StartCoroutine(TimeToEatRoutine());
         }
@@ -101,42 +98,40 @@ public class CultManager : MonoBehaviour
 
     private IEnumerator TimeToEatRoutine()
     {
-        _townsfolkEating = true;
-        while (_townsfolkEating)
+        _cultistEating = true;
+        while (_cultistEating)
         {
-            TimeToEat();
             yield return new WaitForSeconds(EatingInterval);
+            TimeToEat();
         }
     } 
 
-    private void RemoveCultist()
-    {
-        NumberOfCultists--;
-
-        if (NumberOfCultists <= 0)
-        {
-            NumberOfCultists = 0;
-        }
-
-        OnChangingCultists?.Invoke();
-    }
     private void EmptyFoodStores()
     {
-        _townsfolkSpawning = false;
+        _cultistSpawning = false;
     }
 
     private void AddFarmer()
     {
+        if ((NumberOfFarmers + NumberOfArchaeologists) == NumberOfCultists)
+        {
+            Debug.Log("No farmer added. You need more cultists first!");
+            return;
+        }
+
         NumberOfFarmers++;
+
         OnChangingFarmers?.Invoke();
     }
 
     private void RemoveFarmer()
     {
         NumberOfFarmers--;
-        if (NumberOfFarmers <= 0)
+
+        if (NumberOfFarmers < 0)
         {
             NumberOfFarmers = 0;
+            return;
         }
 
         OnChangingFarmers?.Invoke();
@@ -159,7 +154,7 @@ public class CultManager : MonoBehaviour
         OnChangingArcheologists?.Invoke();
     }
 
-    private void AssignJob(int ID)
+    public void AssignJob(int ID)
     {
         if (ID <= 0 || ID >= 4) return;
 
@@ -180,7 +175,7 @@ public class CultManager : MonoBehaviour
         }
     }
 
-    private void UnassignJob(int ID)
+    public void UnassignJob(int ID)
     {
         if (ID <= 0 || ID >= 4) return;
 
