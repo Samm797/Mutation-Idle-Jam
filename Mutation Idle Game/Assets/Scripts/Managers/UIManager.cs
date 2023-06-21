@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Args;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,16 +13,25 @@ public class UIManager : MonoBehaviour
     public TMP_Text numberCultistText;
     public TMP_Text numberFarmerText;
     public TMP_Text numberArcheologistText;
+    public TMP_Text amountMaterialsText;
+    public TMP_Text amountRelicsText;
+    
 
     [Header("GameObjects")]
     public GameObject numberFarmer;
     public GameObject numberArcheologist;
+    public GameObject amountMaterials;
+    public GameObject amountRelics;
+    public GameObject titleCorruption;
 
     [Header("Buttons")]
     public GameObject addOneFarmer;
     public GameObject removeOneFarmer;
     public GameObject addOneArcheologist;
     public GameObject removeOneArcheologist;
+
+    [Header("Misc")]
+    public Slider corruptionSlider;
 
     private int _foodCount;
 

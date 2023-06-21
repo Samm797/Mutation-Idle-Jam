@@ -13,12 +13,8 @@ namespace Args
     {
         public Transform transform;
     }
-    public class GameObjectArgs : EventArgs
+    public class RelicArgs : EventArgs
     {
-        public GameObject gameObject;
-    }
-    public class BoolArgs : EventArgs
-    {
-        public bool value;
+        public Relic relic;
     }
 }
